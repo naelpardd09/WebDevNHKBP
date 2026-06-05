@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naposo HKBP Duren Sawit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/SplitText.min.js"></script>
+<style>
+
+:root {
+  --red: #8B1A1A;
+  --red-dark: #6B1212;
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --cream: #FAF8F3;
+  --white: #FFFFFF;
+  --dark: #1A1A1A;
+  --dark2: #2A2A2A;
+  --gray: #6B6B6B;
+  --gray-light: #E8E4DC;
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --transition: 0.3s ease;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  color: var(--dark);
+  background: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── PAGE TRANSITION OVERLAY ── */
+#page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+.pt-stripe {
+  flex: 1;
+  background: var(--red);
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+/* ── CUSTOM CURSOR ── */
+#cursor-dot {
+  position: fixed;
+  width: 6px; height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
+}
+#cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid var(--red);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+  transition: width 0.3s, height 0.3s, opacity 0.3s, border-color 0.3s;
+}
+#cursor-ring.cursor-hover {
+  width: 56px; height: 56px;
+  opacity: 0.3;
+  border-color: var(--gold);
+}
+
+/* ── MAGNETIC LINE (decorative) ── */
+.mag-line {
+  position: absolute;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  opacity: 0;
+}
+
+/* ── NOISE TEXTURE overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9997;
+  opacity: 0.4;
+}
+
+/* ── PAGE DISPLAY ── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── NAVBAR ── */
+#navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: padding 0.5s cubic-bezier(0.4,0,0.2,1), background 0.5s, box-shadow 0.5s;
+}
+#navbar.scrolled {
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.05);
+  padding: 0.9rem 3rem;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 0.75rem;
+  text-decoration: none; cursor: pointer;
+}
+.nav-logo svg { width: 30px; height: 30px; }
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.03em;
+  transition: color 0.5s;
+}
+#navbar.scrolled .nav-logo-text { color: var(--dark); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.4s;
+}
+.nav-links a::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  width: 0; height: 1px;
+  background: var(--gold);
+  transform: translateX(-50%);
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.nav-links a:hover::before, .nav-links a.active-link::before { width: 100%; }
+#navbar.scrolled .nav-links a { color: var(--dark2); }
+#navbar.scrolled .nav-links a:hover { color: var(--red); }
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  position: relative;
+  z-index: 1;
+}
+.hamburger span {
+  display: block;
+  width: 24px; height: 1.5px;
+  background: var(--white);
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  transform-origin: center;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+#navbar.scrolled .hamburger span { background: var(--dark); }
+
+/* Mobile Menu */
+#mobile-menu {
+  position: fixed;
+  inset: 0;
+  background: var(--dark);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  clip-path: circle(0% at calc(100% - 48px) 48px);
+  transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+}
+#mobile-menu.open {
+  clip-path: circle(150% at calc(100% - 48px) 48px);
+}
+.mobile-nav-item {
+  overflow: hidden;
+  padding: 0.4rem 0;
+}
+#mobile-menu a {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3rem);
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: block;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: color 0.3s;
+}
+#mobile-menu.open a {
+  transform: translateY(0);
+  opacity: 1;
+}
+#mobile-menu a:nth-child(1) { transition-delay: 0.1s; }
+#mobile-menu a:nth-child(2) { transition-delay: 0.15s; }
+#mobile-menu a:nth-child(3) { transition-delay: 0.2s; }
+#mobile-menu a:nth-child(4) { transition-delay: 0.25s; }
+#mobile-menu a:nth-child(5) { transition-delay: 0.3s; }
+#mobile-menu a:hover { color: var(--gold); }
+.mobile-close {
+  position: absolute;
+  top: 1.5rem; right: 2rem;
+  font-size: 1.8rem;
+  color: rgba(255,255,255,0.6);
+  cursor: pointer;
+  background: none; border: none;
+  transition: color 0.3s, transform 0.3s;
+}
+.mobile-close:hover { color: var(--white); transform: rotate(90deg); }
+.mobile-menu-line {
+  position: absolute;
+  bottom: 3rem;
+  left: 3rem;
+  right: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.mobile-menu-contact {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.1em;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+.hero-slider { position: absolute; inset: 0; }
+.hero-slide {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 1.6s cubic-bezier(0.4,0,0.2,1);
+}
+.hero-slide.active { opacity: 1; }
+.hero-slide img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  transition: transform 8s ease;
+}
+.hero-slide.active img { transform: scale(1); }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0,0,0,0.6) 0%,
+    rgba(0,0,0,0.2) 50%,
+    rgba(139,26,26,0.15) 100%
+  );
+  z-index: 1;
+}
+/* Scanline effect */
+.hero-scanlines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: absolute;
+  bottom: 18%;
+  left: 8%;
+  z-index: 3;
+  max-width: 720px;
+}
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+.hero-eyebrow-line {
+  width: 40px; height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.hero-tagline {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateY(10px);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6.5vw, 6rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.08;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+.hero-title-line {
+  overflow: hidden;
+  display: block;
+}
+.hero-title-inner {
+  display: block;
+  transform: translateY(110%);
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.btn-primary {
+  padding: 0.9rem 2.2rem;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--red-dark);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.btn-primary:hover::before { transform: translateX(0); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(139,26,26,0.35); }
+.btn-primary span, .btn-primary svg { position: relative; z-index: 1; }
+
+.btn-outline {
+  padding: 0.9rem 2.2rem;
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,0.4);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s, transform 0.3s;
+}
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.08);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.btn-outline:hover::before { transform: translateY(0); }
+.btn-outline:hover { border-color: var(--white); transform: translateY(-3px); }
+
+/* Hero scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 4rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+}
+.hero-scroll-text {
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  writing-mode: vertical-rl;
+}
+.hero-scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  position: relative;
+  overflow: hidden;
+}
+.hero-scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -60px; left: 0;
+  width: 100%; height: 60px;
+  background: var(--gold);
+  animation: scrollDown 2s ease infinite;
+}
+@keyframes scrollDown {
+  0% { top: -60px; }
+  100% { top: 60px; }
+}
+
+/* Hero dots */
+.hero-dots {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.hero-dot {
+  width: 24px; height: 2px;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+}
+.hero-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+.hero-dot.active { width: 48px; }
+.hero-dot.active::after { transform: scaleX(1); }
+
+/* ── SECTION COMMON ── */
+.section { padding: 120px 0; }
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+.section-label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+.divider-gold {
+  display: block;
+  width: 60px; height: 1px;
+  background: var(--gold);
+  margin: 1.5rem 0;
+}
+
+/* Reveal animations */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(50px);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+/* ── VISI MISI ── */
+.visi-misi { background: var(--cream); position: relative; overflow: hidden; }
+.visi-misi::after {
+  content: 'HKBP';
+  position: absolute;
+  right: -2rem;
+  bottom: -3rem;
+  font-family: var(--font-display);
+  font-size: 14rem;
+  font-weight: 600;
+  color: rgba(139,26,26,0.03);
+  letter-spacing: 0.1em;
+  user-select: none;
+  pointer-events: none;
+}
+.visi-misi-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+  align-items: start;
+}
+.visi-deco {
+  position: sticky;
+  top: 30vh;
+}
+.visi-deco-quote {
+  font-family: var(--font-display);
+  font-size: 16rem;
+  color: var(--gold);
+  opacity: 0.12;
+  line-height: 0.7;
+  pointer-events: none;
+  font-weight: 600;
+}
+.visi-deco-year {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: var(--gray);
+  text-transform: uppercase;
+  margin-top: 2rem;
+}
+.visi-content {
+  padding-left: 3rem;
+  border-left: 1px solid rgba(201,168,76,0.4);
+}
+.visi-text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--dark2);
+  margin-bottom: 2.5rem;
+}
+.visi-text em { color: var(--red); font-style: normal; }
+.misi-title {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1.5rem;
+}
+.misi-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+.misi-list li {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  font-size: 0.9rem; line-height: 1.75; color: var(--gray);
+  opacity: 0; transform: translateX(-20px);
+}
+.misi-num {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  background: var(--red);
+  color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 600; margin-top: 1px;
+}
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  background: var(--dark);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+.stats-strip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.stats-strip::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+.stat-item {
+  text-align: center;
+  padding: 2rem 1rem;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  position: relative;
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 300;
+  color: var(--gold);
+  display: block;
+  line-height: 1;
+}
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: 0.6rem;
+  display: block;
+}
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 0; height: 2px;
+  background: var(--gold);
+  transition: width 0.6s ease;
+}
+.stat-item.animated::before { width: 40%; }
+
+/* ── RENUNGAN ── */
+.renungan-card {
+  max-width: 820px;
+  margin: 0 auto;
+  background: var(--white);
+  box-shadow: 0 2px 0 var(--red), var(--shadow-lg);
+  border-left: 4px solid var(--red);
+  padding: 3.5rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+.renungan-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(201,168,76,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.renungan-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+.renungan-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem; letter-spacing: 0.35em;
+  text-transform: uppercase; color: var(--red); font-weight: 500;
+}
+.renungan-date { font-family: var(--font-body); font-size: 0.78rem; color: var(--gray); }
+.renungan-title {
+  font-family: var(--font-display);
+  font-size: 2.2rem; font-style: italic; font-weight: 300;
+  margin-bottom: 1.5rem; line-height: 1.25;
+}
+.renungan-verse {
+  background: linear-gradient(135deg, #F5F2EC, #EDE9E0);
+  padding: 1.4rem 1.8rem;
+  margin-bottom: 1.8rem;
+  border-radius: 2px;
+  position: relative;
+}
+.renungan-verse::before {
+  content: '"';
+  position: absolute;
+  top: -0.5rem; left: 1rem;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: var(--gold);
+  opacity: 0.3;
+  line-height: 1;
+}
+.renungan-verse p {
+  font-family: var(--font-display);
+  font-size: 1.05rem; font-style: italic; line-height: 1.75;
+  padding-left: 1rem;
+}
+.renungan-verse strong {
+  color: var(--red); font-style: normal;
+  font-family: var(--font-body); font-size: 0.82rem;
+  display: block; margin-top: 0.6rem; padding-left: 1rem;
+}
+.renungan-body { font-size: 0.9rem; line-height: 1.9; color: #555; }
+.renungan-body p { margin-bottom: 1rem; }
+.btn-text-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 500;
+  color: var(--red); text-decoration: none; cursor: pointer;
+  margin-top: 1.5rem; position: relative; letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.btn-text-link svg { transition: transform 0.3s; }
+.btn-text-link:hover svg { transform: translateX(4px); }
+.btn-text-link::after {
+  content: '';
+  position: absolute; bottom: -2px; left: 0;
+  width: 0; height: 1px; background: var(--red);
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.btn-text-link:hover::after { width: 100%; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.7);
+  padding: 80px 0 0;
+  position: relative;
+}
+footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 4rem; right: 4rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem;
+}
+.footer-brand-name {
+  font-family: var(--font-display);
+  font-size: 1.5rem; color: var(--white); margin-bottom: 0.5rem;
+}
+.footer-desc { font-size: 0.83rem; line-height: 1.75; margin-top: 1rem; opacity: 0.5; }
+.footer-col-title {
+  font-family: var(--font-body);
+  font-size: 0.65rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem;
+}
+.footer-contact-item {
+  display: flex; gap: 0.75rem; align-items: flex-start;
+  margin-bottom: 1rem; font-size: 0.83rem; line-height: 1.6;
+}
+.footer-contact-item svg { flex-shrink: 0; margin-top: 2px; opacity: 0.5; }
+.footer-nav-links { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
+.footer-nav-links a {
+  color: rgba(255,255,255,0.5); text-decoration: none;
+  font-size: 0.83rem; cursor: pointer;
+  transition: color 0.3s, padding-left 0.3s;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.footer-nav-links a::before {
+  content: '';
+  width: 0; height: 1px;
+  background: var(--gold);
+  transition: width 0.3s;
+  display: inline-block;
+}
+.footer-nav-links a:hover { color: var(--gold); padding-left: 4px; }
+.footer-nav-links a:hover::before { width: 12px; }
+.footer-social { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+.social-icon {
+  width: 38px; height: 38px;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+  text-decoration: none; position: relative; overflow: hidden;
+}
+.social-icon::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--gold);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.social-icon:hover { border-color: var(--gold); }
+.social-icon:hover::before { transform: translateY(0); }
+.social-icon svg { position: relative; z-index: 1; transition: stroke 0.3s; }
+.social-icon:hover svg { stroke: var(--dark) !important; }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 4rem;
+  padding: 1.5rem 4rem;
+  max-width: 1200px;
+  margin-left: auto; margin-right: auto;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.75rem; opacity: 0.3;
+}
+
+/* ── PAGE 2: PROFIL ── */
+.profil-hero {
+  background: var(--cream);
+  padding: 200px 0 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.profil-hero::before {
+  content: '';
+  position: absolute;
+  top: 30%; left: 50%; transform: translate(-50%, -50%);
+  width: 600px; height: 600px;
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.profil-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 300; margin-bottom: 0.5rem;
+}
+.profil-hero-sub {
+  font-family: var(--font-body); font-size: 0.72rem;
+  letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray);
+}
+.gold-line { width: 80px; height: 1px; background: var(--gold); margin: 1.5rem auto; }
+.profil-section { padding: 80px 0; }
+.profil-section-label {
+  text-align: center;
+  font-family: var(--font-body); font-size: 0.65rem;
+  letter-spacing: 0.4em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 3rem;
+  position: relative;
+}
+.profil-section-label::before,
+.profil-section-label::after {
+  content: '—';
+  margin: 0 1rem;
+  opacity: 0.4;
+}
+.pembimbing-grid {
+  display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-bottom: 3rem;
+}
+.person-card {
+  background: var(--white);
+  box-shadow: var(--shadow);
+  text-align: center;
+  padding: 2.5rem 2rem;
+  width: 220px;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.person-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 0;
+  background: linear-gradient(135deg, rgba(201,168,76,0.06), transparent);
+  transition: height 0.4s;
+}
+.person-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.person-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+.person-card:hover::before { height: 100%; }
+.person-card:hover::after { transform: scaleX(1); }
+.person-photo {
+  width: 96px; height: 96px;
+  border-radius: 50%; object-fit: cover;
+  margin: 0 auto 1.2rem; display: block;
+  border: 2px solid var(--gray-light);
+  transition: border-color 0.4s, transform 0.4s;
+}
+.person-card:hover .person-photo { border-color: var(--gold); transform: scale(1.05); }
+.person-name { font-family: var(--font-body); font-size: 0.88rem; font-weight: 600; margin-bottom: 0.3rem; }
+.person-role { font-family: var(--font-display); font-style: italic; font-size: 0.85rem; color: var(--red); }
+.person-badge {
+  display: inline-block; padding: 0.2rem 0.7rem;
+  font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 600; margin-bottom: 0.8rem;
+}
+.badge-red { background: rgba(139,26,26,0.08); color: var(--red); }
+.badge-gold { background: rgba(201,168,76,0.12); color: #7A5E1A; }
+.badge-dark { background: rgba(26,26,26,0.06); color: var(--dark); }
+.badge-gray { background: rgba(107,107,107,0.08); color: var(--gray); }
+.pengurus-inti { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+.divisi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.divisi-card {
+  background: var(--white); box-shadow: var(--shadow);
+  padding: 1.8rem; border-top: 2px solid;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+  position: relative; overflow: hidden;
+}
+.divisi-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.01), transparent);
+  opacity: 0; transition: opacity 0.4s;
+}
+.divisi-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+.divisi-card:hover::before { opacity: 1; }
+.divisi-card:nth-child(1) { border-color: var(--red); }
+.divisi-card:nth-child(2) { border-color: var(--gold); }
+.divisi-card:nth-child(3) { border-color: #6B6B6B; }
+.divisi-card:nth-child(4) { border-color: #2A5D4F; }
+.divisi-name {
+  font-family: var(--font-body); font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.28em; text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.divisi-member { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem; }
+.divisi-member-photo {
+  width: 36px; height: 36px; border-radius: 50%; object-fit: cover;
+  transition: transform 0.3s;
+}
+.divisi-card:hover .divisi-member-photo { transform: scale(1.08); }
+.divisi-member-info { flex: 1; }
+.divisi-member-name { font-size: 0.8rem; font-weight: 500; }
+.divisi-member-role { font-size: 0.7rem; color: var(--gray); }
+
+/* ── PAGE 3: KEGIATAN ── */
+.kegiatan-hero {
+  background: var(--dark); padding: 200px 0 100px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.kegiatan-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(139,26,26,0.15) 0%, transparent 70%);
+}
+.kegiatan-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--white); font-weight: 300; margin-bottom: 1rem;
+  position: relative;
+}
+.kegiatan-hero-sub {
+  max-width: 560px; margin: 0 auto;
+  font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.8;
+}
+.timeline-strip {
+  background: var(--gold); padding: 0 4rem; overflow-x: auto;
+  position: relative;
+}
+.timeline-inner {
+  display: flex; gap: 0; max-width: 1200px; margin: 0 auto;
+}
+.timeline-item {
+  flex-shrink: 0;
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; gap: 0.6rem;
+  font-size: 0.75rem; font-weight: 500; color: rgba(26,26,26,0.8);
+  border-right: 1px solid rgba(0,0,0,0.08);
+  transition: background 0.3s;
+  cursor: default;
+}
+.timeline-item:hover { background: rgba(255,255,255,0.2); }
+.timeline-item-day { font-weight: 800; min-width: 30px; color: var(--dark); }
+.kegiatan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.kegiatan-card {
+  border-radius: 12px; overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s;
+  background: var(--white);
+  position: relative;
+}
+.kegiatan-card::after {
+  content: '';
+  position: absolute; inset: 0; border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+  pointer-events: none;
+}
+.kegiatan-card:hover { transform: translateY(-10px); box-shadow: var(--shadow-lg); }
+.kegiatan-card-top {
+  height: 200px; display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.kegiatan-card-top::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 60%);
+}
+.kegiatan-card-top.merah { background: linear-gradient(135deg, var(--red), #6B1212); }
+.kegiatan-card-top.gold { background: linear-gradient(135deg, var(--gold), #A07830); }
+.kegiatan-card-top.dark { background: linear-gradient(135deg, #3A3A3A, var(--dark)); }
+.kegiatan-card-top svg {
+  opacity: 0.85;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.kegiatan-card:hover .kegiatan-card-top svg { transform: scale(1.1) rotate(3deg); }
+.kegiatan-card-body { padding: 1.8rem; }
+.kegiatan-card-title {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; margin-bottom: 1rem;
+}
+.kegiatan-meta { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.2rem; }
+.kegiatan-meta-item { display: flex; gap: 0.5rem; align-items: center; font-size: 0.76rem; color: var(--gray); }
+.kegiatan-desc { font-size: 0.84rem; line-height: 1.75; color: var(--gray); margin-bottom: 1.4rem; }
+.btn-detail {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--red); cursor: pointer;
+  background: none; border: none; padding: 0;
+  transition: gap 0.3s;
+}
+.btn-detail:hover { gap: 0.8rem; }
+
+/* ── PAGE 4: DOKUMENTASI ── */
+.dokumentasi-hero {
+  background: var(--cream); padding: 200px 0 80px; text-align: center;
+}
+.filter-tabs {
+  display: flex; justify-content: center;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--gray-light);
+  overflow-x: auto; position: relative;
+}
+.filter-tab {
+  padding: 0.8rem 1.8rem;
+  font-family: var(--font-body); font-size: 0.74rem;
+  letter-spacing: 0.12em; text-transform: uppercase; font-weight: 400;
+  cursor: pointer; border: none; background: none; color: var(--gray);
+  position: relative; white-space: nowrap; transition: color 0.3s;
+}
+.filter-tab::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; right: 0;
+  height: 2px; background: var(--red);
+  transform: scaleX(0);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.filter-tab.active { color: var(--red); }
+.filter-tab.active::after { transform: scaleX(1); }
+.docs-grid { columns: 4; column-gap: 12px; }
+.doc-item {
+  break-inside: avoid; margin-bottom: 12px;
+  position: relative; overflow: hidden; cursor: pointer; display: block;
+  border-radius: 2px;
+}
+.doc-item img {
+  width: 100%; display: block;
+  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.doc-item:hover img { transform: scale(1.08); }
+.doc-item-overlay {
+  position: absolute; inset: 0;
+  background: rgba(26,26,26,0.6);
+  opacity: 0; transition: opacity 0.4s;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.5rem;
+}
+.doc-item:hover .doc-item-overlay { opacity: 1; }
+.doc-item-overlay svg { color: white; transform: scale(0.8); transition: transform 0.3s; }
+.doc-item:hover .doc-item-overlay svg { transform: scale(1); }
+
+/* Lightbox */
+#lightbox {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0);
+  z-index: 9999; display: none;
+  align-items: center; justify-content: center;
+  transition: background 0.3s;
+}
+#lightbox.open { display: flex; background: rgba(0,0,0,0.94); }
+.lightbox-img {
+  max-width: 85vw; max-height: 85vh; object-fit: contain;
+  transform: scale(0.85); opacity: 0;
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  border-radius: 2px;
+}
+.lightbox-img.show { transform: scale(1); opacity: 1; }
+#lightbox-close {
+  position: absolute; top: 1.5rem; right: 2rem;
+  color: rgba(255,255,255,0.6); font-size: 1.6rem;
+  cursor: pointer; background: none; border: none;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.3s, transform 0.3s;
+}
+#lightbox-close:hover { color: var(--white); transform: rotate(90deg); }
+.lightbox-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7); width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.4rem;
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.14); color: white; }
+#lightbox-prev { left: 2rem; }
+#lightbox-prev:hover { transform: translateY(-50%) translateX(-3px); }
+#lightbox-next { right: 2rem; }
+#lightbox-next:hover { transform: translateY(-50%) translateX(3px); }
+
+/* ── PAGE 5: KONTAK ── */
+.kontak-hero {
+  background: var(--dark); padding: 200px 0 100px;
+  position: relative; overflow: hidden;
+}
+.kontak-hero::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+}
+.kontak-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
+.kontak-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5.5rem); color: var(--white); font-weight: 300;
+  line-height: 1.05; max-width: 700px;
+}
+.kontak-hero-title em { font-style: italic; color: var(--gold-light); }
+.kontak-hero-sub {
+  font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-top: 1.2rem; letter-spacing: 0.15em;
+}
+.kontak-content { padding: 80px 0; }
+.kontak-grid {
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem;
+  max-width: 1200px; margin: 0 auto; padding: 0 4rem;
+}
+.kontak-info-item {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--gray-light);
+}
+.kontak-info-item:last-of-type { border-bottom: none; }
+.kontak-info-icon {
+  width: 44px; height: 44px;
+  background: rgba(139,26,26,0.06);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s, transform 0.3s;
+}
+.kontak-info-item:hover .kontak-info-icon {
+  background: rgba(139,26,26,0.12);
+  transform: scale(1.05);
+}
+.kontak-info-label {
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--red); margin-bottom: 0.4rem;
+}
+.kontak-info-value { font-size: 0.86rem; line-height: 1.65; color: var(--dark2); }
+.kontak-info-value a { color: var(--red); text-decoration: none; }
+.btn-wa {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.65rem 1.3rem;
+  background: #25D366; color: white;
+  font-size: 0.76rem; font-weight: 500; letter-spacing: 0.05em;
+  text-decoration: none; margin-top: 0.6rem;
+  transition: background 0.3s, transform 0.3s;
+}
+.btn-wa:hover { background: #1da851; transform: translateY(-2px); }
+.jam-ops { background: var(--cream); padding: 1.2rem 1.5rem; margin-top: 0.5rem; }
+.jam-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.81rem; padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.jam-row:last-child { border-bottom: none; }
+.maps-frame { border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-lg); }
+.maps-frame iframe { width: 100%; height: 360px; border: none; display: block; }
+.contact-form { margin-top: 2rem; }
+.form-group { margin-bottom: 1.2rem; }
+.form-label {
+  display: block; font-size: 0.68rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); margin-bottom: 0.5rem;
+}
+.form-input, .form-textarea {
+  width: 100%; padding: 0.9rem 1rem;
+  border: 1px solid var(--gray-light);
+  background: var(--white);
+  font-family: var(--font-body); font-size: 0.86rem; color: var(--dark);
+  transition: border-color 0.3s, box-shadow 0.3s; outline: none;
+}
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px rgba(139,26,26,0.06);
+}
+.form-textarea { min-height: 120px; resize: vertical; }
+.btn-submit {
+  width: 100%; padding: 1rem;
+  background: var(--red); color: white; border: none;
+  font-family: var(--font-body); font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer;
+  transition: background 0.3s, transform 0.3s;
+  display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  position: relative; overflow: hidden;
+}
+.btn-submit::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%);
+}
+.btn-submit:hover { background: var(--red-dark); }
+.btn-submit:hover::before { animation: shimmer 0.6s ease; }
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.form-success {
+  display: none; text-align: center; padding: 2.5rem 2rem; color: #2A5D4F;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .docs-grid { columns: 3; }
+  .divisi-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid > *:last-child { grid-column: 1 / -1; }
+}
+@media (max-width: 768px) {
+  .section-inner { padding: 0 1.5rem; }
+  .section { padding: 80px 0; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  #navbar { padding: 1.2rem 1.5rem; }
+  #navbar.scrolled { padding: 0.9rem 1.5rem; }
+  .hero-content { left: 5%; right: 5%; bottom: 14%; }
+  .hero-scroll { display: none; }
+  .visi-misi-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .visi-deco { display: none; }
+  .visi-content { padding-left: 1.5rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-item { border-right: none; }
+  .kegiatan-grid { grid-template-columns: 1fr; }
+  .docs-grid { columns: 2; }
+  .kontak-grid { grid-template-columns: 1fr; }
+  .divisi-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; padding: 0 1.5rem; gap: 2.5rem; }
+  .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  .profil-hero, .kegiatan-hero, .dokumentasi-hero, .kontak-hero { padding: 140px 0 60px; }
+  .kontak-grid { padding: 0 1.5rem; }
+  .kontak-hero-inner { padding: 0 1.5rem; }
+  .renungan-card { padding: 2rem 1.5rem; }
+  .mobile-menu-line { display: none; }
+  body { cursor: auto; }
+  #cursor-dot, #cursor-ring { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- Page Transition Overlay -->
+<div id="page-transition">
+  <div class="pt-stripe"></div>
+  <div class="pt-stripe"></div>
+  <div class="pt-stripe"></div>
+  <div class="pt-stripe"></div>
+  <div class="pt-stripe"></div>
+</div>
+
+<!-- Custom Cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- Lightbox -->
+<div id="lightbox">
+  <button id="lightbox-close">✕</button>
+  <button class="lightbox-nav" id="lightbox-prev">‹</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav" id="lightbox-next">›</button>
+</div>
+
+<!-- Mobile Menu -->
+<div id="mobile-menu">
+  <button class="mobile-close" id="close-menu">✕</button>
+  <div class="mobile-nav-item"><a onclick="navigateTo('home');closeMobileMenu()">Home</a></div>
+  <div class="mobile-nav-item"><a onclick="navigateTo('profil');closeMobileMenu()">Profil</a></div>
+  <div class="mobile-nav-item"><a onclick="navigateTo('kegiatan');closeMobileMenu()">Kegiatan</a></div>
+  <div class="mobile-nav-item"><a onclick="navigateTo('dokumentasi');closeMobileMenu()">Dokumentasi</a></div>
+  <div class="mobile-nav-item"><a onclick="navigateTo('kontak');closeMobileMenu()">Kontak</a></div>
+  <div class="mobile-menu-line">
+    <span class="mobile-menu-contact">nhkbpdurenawit@gmail.com</span>
+    <span class="mobile-menu-contact">+62 812-3456-7890</span>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a class="nav-logo" onclick="navigateTo('home')">
+    <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M15 2 L15 28" stroke="#C9A84C" stroke-width="1.2"/>
+      <path d="M7 11 L23 11" stroke="#C9A84C" stroke-width="1.2"/>
+    </svg>
+    <span class="nav-logo-text">NHKBP Duren Sawit</span>
+  </a>
+  <ul class="nav-links">
+    <li><a onclick="navigateTo('home')" class="nav-link active-link" data-page="home">Home</a></li>
+    <li><a onclick="navigateTo('profil')" class="nav-link" data-page="profil">Profil</a></li>
+    <li><a onclick="navigateTo('kegiatan')" class="nav-link" data-page="kegiatan">Kegiatan</a></li>
+    <li><a onclick="navigateTo('dokumentasi')" class="nav-link" data-page="dokumentasi">Dokumentasi</a></li>
+    <li><a onclick="navigateTo('kontak')" class="nav-link" data-page="kontak">Kontak</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger-btn" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ══════════════════ PAGE 1: HOME ══════════════════ -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-slider" id="hero-slider">
+      <div class="hero-slide active"><img src="https://picsum.photos/1920/1080?random=10" alt="Kegiatan Naposo 1" loading="eager"></div>
+      <div class="hero-slide"><img src="https://picsum.photos/1920/1080?random=20" alt="Kegiatan Naposo 2" loading="lazy"></div>
+      <div class="hero-slide"><img src="https://picsum.photos/1920/1080?random=30" alt="Kegiatan Naposo 3" loading="lazy"></div>
+      <div class="hero-slide"><img src="https://picsum.photos/1920/1080?random=40" alt="Kegiatan Naposo 4" loading="lazy"></div>
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-scanlines"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-line" id="eyebrow-line"></div>
+        <span class="hero-tagline" id="hero-tagline">Pemuda Gereja HKBP Duren Sawit</span>
+      </div>
+      <h1 class="hero-title" id="hero-title">
+        <span class="hero-title-line"><span class="hero-title-inner">Bersatu dalam <em>Iman,</em></span></span>
+        <span class="hero-title-line"><span class="hero-title-inner">Bertumbuh dalam <em>Kasih</em></span></span>
+      </h1>
+      <div class="hero-cta" id="hero-cta">
+        <a class="btn-primary" onclick="navigateTo('profil')">
+          <span>Kenali Kami</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a class="btn-outline" onclick="navigateTo('kegiatan')">Kegiatan Kami</a>
+      </div>
+    </div>
+    <div class="hero-scroll" id="hero-scroll">
+      <span class="hero-scroll-text">Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+    <div class="hero-dots" id="hero-dots">
+      <div class="hero-dot active" onclick="goToSlide(0)"></div>
+      <div class="hero-dot" onclick="goToSlide(1)"></div>
+      <div class="hero-dot" onclick="goToSlide(2)"></div>
+      <div class="hero-dot" onclick="goToSlide(3)"></div>
+    </div>
+  </section>
+
+  <!-- VISI MISI -->
+  <section class="section visi-misi">
+    <div class="section-inner">
+      <div class="visi-misi-grid">
+        <div class="visi-deco reveal-left">
+          <div class="visi-deco-quote">"</div>
+          <p class="visi-deco-year">Est. 1971</p>
+        </div>
+        <div class="visi-content">
+          <span class="section-label reveal-up">Visi Organisasi</span>
+          <p class="visi-text reveal-up">"Menjadi komunitas pemuda yang hidup dalam iman Kristus, bertumbuh dalam persekutuan, dan berbuah dalam pelayanan bagi <em>gereja dan masyarakat.</em>"</p>
+          <span class="divider-gold reveal-up"></span>
+          <p class="misi-title reveal-up">Misi Kami</p>
+          <ul class="misi-list">
+            <li><div class="misi-num">1</div>Membangun persekutuan pemuda yang hangat, inklusif, dan penuh kasih.</li>
+            <li><div class="misi-num">2</div>Menumbuhkan iman melalui firman Tuhan, doa, dan renungan bersama.</li>
+            <li><div class="misi-num">3</div>Mengembangkan bakat dan potensi pemuda melalui seni, olahraga, dan pelayanan.</li>
+            <li><div class="misi-num">4</div>Berpartisipasi aktif dalam kehidupan gereja dan lingkungan sosial.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-strip">
+    <div class="section-inner">
+      <div class="stats-grid">
+        <div class="stat-item reveal-scale"><span class="stat-num" data-target="120">0</span><span class="stat-label">Anggota Aktif</span></div>
+        <div class="stat-item reveal-scale"><span class="stat-num" data-target="1971">0</span><span class="stat-label">Tahun Berdiri</span></div>
+        <div class="stat-item reveal-scale"><span class="stat-num" data-target="4">0</span><span class="stat-label">Divisi Pelayanan</span></div>
+        <div class="stat-item reveal-scale"><span class="stat-num" data-target="36">0</span><span class="stat-label">Kegiatan per Tahun</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RENUNGAN -->
+  <section class="section">
+    <div class="section-inner">
+      <div style="text-align:center; margin-bottom: 3.5rem;">
+        <span class="section-label reveal-up">Firman Tuhan</span>
+        <h2 class="section-title reveal-up">Renungan Harian</h2>
+        <span class="divider-gold reveal-up" style="margin:1rem auto;"></span>
+      </div>
+      <div class="renungan-card reveal-up">
+        <div class="renungan-header">
+          <span class="renungan-label">Renungan Harian</span>
+          <span class="renungan-date" id="renungan-date"></span>
+        </div>
+        <h3 class="renungan-title">Kekuatan dalam Kelemahan</h3>
+        <div class="renungan-verse">
+          <p>"Sebab jika aku lemah, maka aku kuat."</p>
+          <strong>— 2 Korintus 12:10</strong>
+        </div>
+        <div class="renungan-body">
+          <p>Dalam dunia yang selalu menuntut kita tampil kuat, sehat, dan berdaya — kata-kata Paulus ini terdengar paradoks. Namun inilah inti dari iman Kristen: bahwa kelemahan kita bukanlah halangan, melainkan justru ruang di mana kuasa Allah dinyatakan dengan paling sempurna.</p>
+          <p>Ketika kita berhenti berpura-pura kuat dan mengakui keterbatasan kita di hadapan Tuhan, kita membuka pintu bagi kasih karunia-Nya yang lebih besar. Paulus sendiri memiliki "duri dalam daging" — suatu penderitaan yang tidak dihilangkan Tuhan, namun dijadikan sarana untuk mengenal ketergantungan penuh kepada-Nya.</p>
+          <p>Sebagai pemuda, kita sering merasa harus memiliki segalanya: ambisi, rencana, kapasitas. Namun Tuhan mengundang kita untuk datang kepada-Nya dengan hati yang terbuka — karena di sanalah kekuatan sejati dimulai.</p>
+        </div>
+        <a class="btn-text-link">Baca Selengkapnya <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="reveal-up">
+        <div class="footer-brand-name">Naposo HKBP Duren Sawit</div>
+        <span class="divider-gold"></span>
+        <p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p>
+      </div>
+      <div class="reveal-up">
+        <p class="footer-col-title">Kontak</p>
+        <div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Jl. Duren Sawit Raya No. 1, Jakarta Timur 13440</div>
+        <div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.09 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013 2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0121.82 17z"/></svg>+62 812-3456-7890</div>
+        <div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>nhkbpdurenawit@gmail.com</div>
+      </div>
+      <div class="reveal-up">
+        <p class="footer-col-title">Navigasi</p>
+        <ul class="footer-nav-links">
+          <li><a onclick="navigateTo('home')">Home</a></li>
+          <li><a onclick="navigateTo('profil')">Profil Pengurus</a></li>
+          <li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li>
+          <li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li>
+          <li><a onclick="navigateTo('kontak')">Kontak</a></li>
+        </ul>
+        <div class="footer-social">
+          <a class="social-icon" href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a class="social-icon" href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a>
+          <a class="social-icon" href="#" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2025 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Soli Deo Gloria</span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════ PAGE 2: PROFIL ══════════════════ -->
+<div id="page-profil" class="page">
+  <div class="profil-hero">
+    <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Periode 2024 – 2026</span>
+    <h1 class="profil-hero-title reveal-up">Pengurus Naposo<br>HKBP Duren Sawit</h1>
+    <div class="gold-line"></div>
+    <p class="profil-hero-sub">Melayani dengan hati yang tulus</p>
+  </div>
+  <section class="profil-section" style="background:var(--white);">
+    <div class="section-inner">
+      <p class="profil-section-label">Pendeta Ressort</p>
+      <div class="pembimbing-grid">
+        <div class="person-card reveal-scale">
+          <img src="https://picsum.photos/400/400?random=51" alt="Pdt. Dr. Martua Siahaan" class="person-photo" loading="lazy">
+          <span class="person-badge badge-red">Pendeta Ressort</span>
+          <p class="person-name">Pdt. Dr. Martua Siahaan, M.Th.</p>
+          <p class="person-role">Pendeta Ressort HKBP Duren Sawit</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="profil-section" style="background:var(--cream);padding-top:60px;">
+    <div class="section-inner">
+      <p class="profil-section-label">Pembimbing Naposobulung</p>
+      <div class="pembimbing-grid">
+        <div class="person-card reveal-scale">
+          <img src="https://picsum.photos/400/400?random=52" alt="Pdt. Yanti Simanjuntak" class="person-photo" loading="lazy">
+          <span class="person-badge badge-gold">Pembimbing</span>
+          <p class="person-name">Pdt. Yanti Simanjuntak</p>
+          <p class="person-role">Pembimbing Naposo</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="profil-section" style="padding-top:60px;">
+    <div class="section-inner">
+      <p class="profil-section-label">Pengurus Inti</p>
+      <div class="pengurus-inti">
+        <div class="person-card reveal-scale"><img src="https://picsum.photos/400/400?random=53" alt="Evan Hutabarat" class="person-photo" loading="lazy"><span class="person-badge badge-red">Ketua</span><p class="person-name">Evan Hutabarat</p><p class="person-role">Ketua Naposo</p></div>
+        <div class="person-card reveal-scale"><img src="https://picsum.photos/400/400?random=54" alt="Sinta Napitupulu" class="person-photo" loading="lazy"><span class="person-badge badge-dark">Sekretaris</span><p class="person-name">Sinta Napitupulu</p><p class="person-role">Sekretaris</p></div>
+        <div class="person-card reveal-scale"><img src="https://picsum.photos/400/400?random=55" alt="David Lumbantobing" class="person-photo" loading="lazy"><span class="person-badge badge-gold">Bendahara</span><p class="person-name">David Lumbantobing</p><p class="person-role">Bendahara</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="profil-section" style="background:var(--cream);padding-top:60px;">
+    <div class="section-inner">
+      <p class="profil-section-label">Divisi Pelayanan</p>
+      <div class="divisi-grid">
+        <div class="divisi-card reveal-up"><p class="divisi-name" style="color:var(--red);">Divisi Humas</p><div class="divisi-member"><img src="https://picsum.photos/400/400?random=56" alt="Andreas" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Andreas Sirait</div><div class="divisi-member-role">Koordinator</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=57" alt="Rina" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Rina Tambunan</div><div class="divisi-member-role">Anggota</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=58" alt="Dodi" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Dodi Pangaribuan</div><div class="divisi-member-role">Anggota</div></div></div></div>
+        <div class="divisi-card reveal-up"><p class="divisi-name" style="color:#7A5E1A;">Divisi Olahraga</p><div class="divisi-member"><img src="https://picsum.photos/400/400?random=59" alt="Benny" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Benny Saragih</div><div class="divisi-member-role">Koordinator</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=60" alt="Jesica" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Jesica Manurung</div><div class="divisi-member-role">Wakil</div></div></div></div>
+        <div class="divisi-card reveal-up"><p class="divisi-name" style="color:var(--gray);">Divisi Seni & Budaya</p><div class="divisi-member"><img src="https://picsum.photos/400/400?random=61" alt="Mega" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Mega Situmorang</div><div class="divisi-member-role">Koordinator</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=62" alt="Aldo" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Aldo Gultom</div><div class="divisi-member-role">Wakil</div></div></div></div>
+        <div class="divisi-card reveal-up"><p class="divisi-name" style="color:#2A5D4F;">Divisi Kerohanian</p><div class="divisi-member"><img src="https://picsum.photos/400/400?random=63" alt="Samuel" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Samuel Sinaga</div><div class="divisi-member-role">Koordinator</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=64" alt="Frida" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Frida Tobing</div><div class="divisi-member-role">Anggota</div></div></div><div class="divisi-member"><img src="https://picsum.photos/400/400?random=65" alt="Ester" class="divisi-member-photo" loading="lazy"><div class="divisi-member-info"><div class="divisi-member-name">Ester Simbolon</div><div class="divisi-member-role">Anggota</div></div></div></div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Ikuti Kami</p><div class="footer-social" style="margin-top:0;"><a class="social-icon" href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a class="social-icon" href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a></div><p style="font-size:0.74rem;opacity:0.35;margin-top:1.5rem;">@nhkbp_durenawit</p></div></div><div class="footer-bottom"><span>© 2025 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Soli Deo Gloria</span></div></footer>
+</div>
+
+<!-- ══════════════════ PAGE 3: KEGIATAN ══════════════════ -->
+<div id="page-kegiatan" class="page">
+  <div class="kegiatan-hero">
+    <div class="section-inner">
+      <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Program & Aktivitas</span>
+      <h1 class="kegiatan-hero-title reveal-up">Kegiatan Naposo</h1>
+      <p class="kegiatan-hero-sub reveal-up">Program rutin dan kegiatan insidental Naposo HKBP Duren Sawit — pelayanan lewat talenta, tubuh, dan semangat bersama.</p>
+    </div>
+  </div>
+  <div class="timeline-strip">
+    <div class="timeline-inner">
+      <div class="timeline-item"><span class="timeline-item-day">Sel</span> Latihan Paduan Suara · 20.00 WIB</div>
+      <div class="timeline-item"><span class="timeline-item-day">Jum</span> Latihan Paduan Suara · 20.00 WIB</div>
+      <div class="timeline-item"><span class="timeline-item-day">Sab</span> Latihan Paduan Suara · 20.00 WIB</div>
+      <div class="timeline-item"><span class="timeline-item-day">TBA</span> Fun Sport · 2× Seminggu</div>
+      <div class="timeline-item"><span class="timeline-item-day">Bln</span> Partangiangan Bulanan · 1× Sebulan</div>
+    </div>
+  </div>
+  <section class="section">
+    <div class="section-inner">
+      <div class="kegiatan-grid">
+        <div class="kegiatan-card reveal-up">
+          <div class="kegiatan-card-top merah"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <div class="kegiatan-card-body">
+            <h3 class="kegiatan-card-title">Latihan Paduan Suara</h3>
+            <div class="kegiatan-meta"><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Selasa, Jumat, Sabtu · 20.00 WIB</div><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Gereja HKBP Duren Sawit</div></div>
+            <p class="kegiatan-desc">Latihan rutin paduan suara Naposo untuk pelayanan ibadah minggu dan event gerejawi. Terbuka untuk semua anggota yang memiliki kerinduan melayani lewat nyanyian.</p>
+            <button class="btn-detail">Detail Kegiatan →</button>
+          </div>
+        </div>
+        <div class="kegiatan-card reveal-up">
+          <div class="kegiatan-card-top gold"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M2 12a14.5 14.5 0 0020 0"/></svg></div>
+          <div class="kegiatan-card-body">
+            <h3 class="kegiatan-card-title">Fun Sport</h3>
+            <div class="kegiatan-meta"><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2× Seminggu (Hari TBA)</div><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Lokasi TBA</div></div>
+            <p class="kegiatan-desc">Program olahraga bersama untuk mempererat kebersamaan anggota sekaligus menjaga kebugaran. Berbagai jenis olahraga dirotasi setiap pekannya.</p>
+            <button class="btn-detail">Detail Kegiatan →</button>
+          </div>
+        </div>
+        <div class="kegiatan-card reveal-up">
+          <div class="kegiatan-card-top dark"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+          <div class="kegiatan-card-body">
+            <h3 class="kegiatan-card-title">Partangiangan Bulanan</h3>
+            <div class="kegiatan-meta"><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>1× Sebulan (TBA)</div><div class="kegiatan-meta-item"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Rumah Anggota (Bergantian)</div></div>
+            <p class="kegiatan-desc">Kebaktian doa dan persekutuan bulanan Naposo. Momen khusus untuk merenungkan firman Tuhan, berbagi pergumulan, dan saling menguatkan dalam iman.</p>
+            <button class="btn-detail">Detail Kegiatan →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Kontak</p><div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.09 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013 2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0121.82 17z"/></svg>+62 812-3456-7890</div></div></div><div class="footer-bottom"><span>© 2025 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Soli Deo Gloria</span></div></footer>
+</div>
+
+<!-- ══════════════════ PAGE 4: DOKUMENTASI ══════════════════ -->
+<div id="page-dokumentasi" class="page">
+  <div class="dokumentasi-hero">
+    <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Galeri Foto</span>
+    <h1 class="reveal-up" style="font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;">Dokumentasi Kegiatan</h1>
+    <div class="gold-line"></div>
+    <p style="font-family:var(--font-body);font-size:0.83rem;color:var(--gray);max-width:480px;margin:0 auto;line-height:1.7;">Rekam jejak perjalanan pelayanan Naposo HKBP Duren Sawit dalam gambar.</p>
+  </div>
+  <section class="section" style="padding-top:60px;">
+    <div class="section-inner">
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">Semua</button>
+        <button class="filter-tab" data-filter="paduan-suara">Paduan Suara</button>
+        <button class="filter-tab" data-filter="olahraga">Olahraga</button>
+        <button class="filter-tab" data-filter="seni">Seni</button>
+        <button class="filter-tab" data-filter="kerohanian">Kerohanian</button>
+      </div>
+      <div class="docs-grid" id="docs-grid">
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/400?random=101"><img src="https://picsum.photos/600/400?random=101" alt="Paduan Suara 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/700?random=102"><img src="https://picsum.photos/600/700?random=102" alt="Olahraga 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/450?random=103"><img src="https://picsum.photos/600/450?random=103" alt="Seni 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/380?random=104"><img src="https://picsum.photos/600/380?random=104" alt="Kerohanian 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/500?random=105"><img src="https://picsum.photos/600/500?random=105" alt="Paduan Suara 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=106"><img src="https://picsum.photos/600/400?random=106" alt="Olahraga 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/640?random=107"><img src="https://picsum.photos/600/640?random=107" alt="Kerohanian 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=108"><img src="https://picsum.photos/600/400?random=108" alt="Seni 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/420?random=109"><img src="https://picsum.photos/600/420?random=109" alt="Paduan Suara 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/580?random=110"><img src="https://picsum.photos/600/580?random=110" alt="Olahraga 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/400?random=111"><img src="https://picsum.photos/600/400?random=111" alt="Kerohanian 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/460?random=112"><img src="https://picsum.photos/600/460?random=112" alt="Seni 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/720?random=113"><img src="https://picsum.photos/600/720?random=113" alt="Paduan Suara 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=114"><img src="https://picsum.photos/600/400?random=114" alt="Olahraga 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/480?random=115"><img src="https://picsum.photos/600/480?random=115" alt="Kerohanian 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=116"><img src="https://picsum.photos/600/400?random=116" alt="Seni 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Kontak</p><div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>nhkbpdurenawit@gmail.com</div></div></div><div class="footer-bottom"><span>© 2025 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Soli Deo Gloria</span></div></footer>
+</div>
+
+<!-- ══════════════════ PAGE 5: KONTAK ══════════════════ -->
+<div id="page-kontak" class="page">
+  <div class="kontak-hero">
+    <div class="kontak-hero-inner">
+      <span class="section-label reveal-up" style="display:block;margin-bottom:1.2rem;">Mari Terhubung</span>
+      <h1 class="kontak-hero-title reveal-up">Hubungi<br><em>Kami</em></h1>
+      <p class="kontak-hero-sub reveal-up">Sekretariat NHKBP Duren Sawit · Jakarta Timur</p>
+    </div>
+  </div>
+  <section class="kontak-content">
+    <div class="kontak-grid">
+      <div>
+        <div class="kontak-info-item reveal-up"><div class="kontak-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><div><p class="kontak-info-label">Sekretariat</p><p class="kontak-info-value">Jl. Duren Sawit Raya No. 1<br>Duren Sawit, Jakarta Timur 13440</p></div></div>
+        <div class="kontak-info-item reveal-up"><div class="kontak-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.09 13a19.79 19.79 0 01-3.07-8.67A2 2 0 013 2.18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0121.82 17z"/></svg></div><div><p class="kontak-info-label">WhatsApp</p><p class="kontak-info-value">+62 812-3456-7890</p><a href="https://wa.me/628123456789" class="btn-wa" target="_blank"><svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>Chat WhatsApp</a></div></div>
+        <div class="kontak-info-item reveal-up"><div class="kontak-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div><p class="kontak-info-label">Email</p><p class="kontak-info-value"><a href="mailto:nhkbpdurenawit@gmail.com">nhkbpdurenawit@gmail.com</a></p></div></div>
+        <div class="kontak-info-item reveal-up"><div class="kontak-info-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div><div><p class="kontak-info-label">Instagram</p><p class="kontak-info-value"><a href="https://instagram.com/nhkbp_durenawit" target="_blank">@nhkbp_durenawit</a></p></div></div>
+        <div class="reveal-up" style="margin-top:1rem;">
+          <p style="font-family:var(--font-body);font-size:0.62rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:0.5rem;">Jam Operasional</p>
+          <div class="jam-ops"><div class="jam-row"><span>Senin – Jumat</span><span>09.00 – 17.00 WIB</span></div><div class="jam-row"><span>Sabtu</span><span>10.00 – 14.00 WIB</span></div><div class="jam-row"><span>Minggu</span><span>12.00 – 13.00 WIB</span></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="maps-frame reveal-up"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123456789!2d106.905!3d-6.225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sGereja+HKBP+Duren+Sawit!5e0!3m2!1sid!2sid!4v1234567890" width="100%" height="360" style="border:0;display:block;" allowfullscreen="" loading="lazy" title="Peta Lokasi HKBP Duren Sawit"></iframe></div>
+        <div class="contact-form reveal-up">
+          <p style="font-family:var(--font-body);font-size:0.65rem;font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--red);margin-bottom:1.2rem;">Kirim Pesan</p>
+          <div id="contact-form-el">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group"><label class="form-label" for="nama">Nama Lengkap</label><input class="form-input" type="text" id="nama" placeholder="Nama kamu"></div>
+              <div class="form-group"><label class="form-label" for="email">Email</label><input class="form-input" type="email" id="email" placeholder="email@contoh.com"></div>
+            </div>
+            <div class="form-group"><label class="form-label" for="wa">Nomor WhatsApp</label><input class="form-input" type="tel" id="wa" placeholder="+62 812..."></div>
+            <div class="form-group"><label class="form-label" for="pesan">Pesan</label><textarea class="form-textarea" id="pesan" placeholder="Tuliskan pesanmu di sini..."></textarea></div>
+            <button class="btn-submit" onclick="submitForm()"><span id="submit-text">Kirim Pesan</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2L15 22 11 13 2 9l20-7z"/></svg></button>
+          </div>
+          <div class="form-success" id="form-success"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto 1rem;"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg><p style="font-family:var(--font-display);font-size:1.4rem;font-style:italic;margin-bottom:0.5rem;">Pesan Terkirim!</p><p style="font-size:0.83rem;color:var(--gray);">Kami akan segera membalas pesanmu.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Kontak Cepat</p><div class="footer-contact-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Jl. Duren Sawit Raya No. 1, Jakarta Timur</div><div class="footer-social" style="margin-top:1rem;"><a class="social-icon" href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a class="social-icon" href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a></div></div></div><div class="footer-bottom"><span>© 2025 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Soli Deo Gloria</span></div></footer>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── CURSOR ── */
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let ringX=0,ringY=0,dotX=0,dotY=0,mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function ani(){
+  dotX+=(mx-dotX)*0.18; dotY+=(my-dotY)*0.18;
+  ringX+=(mx-ringX)*0.07; ringY+=(my-ringY)*0.07;
+  dot.style.left=dotX+'px'; dot.style.top=dotY+'px';
+  ring.style.left=ringX+'px'; ring.style.top=ringY+'px';
+  requestAnimationFrame(ani);
+})();
+document.querySelectorAll('a,button,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>ring.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave',()=>ring.classList.remove('cursor-hover'));
+});
+
+/* ── NAVBAR ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ── HERO SLIDER with Ken Burns ── */
+let currentSlide=0;
+const slides=document.querySelectorAll('.hero-slide');
+const heroDots=document.querySelectorAll('.hero-dot');
+
+function goToSlide(n){
+  slides[currentSlide].classList.remove('active');
+  heroDots[currentSlide].classList.remove('active');
+  currentSlide=n;
+  slides[currentSlide].classList.add('active');
+  heroDots[currentSlide].classList.add('active');
+}
+setInterval(()=>goToSlide((currentSlide+1)%slides.length),5500);
+
+/* ── HERO ENTRANCE ── */
+window.addEventListener('DOMContentLoaded',()=>{
+  const tl = gsap.timeline({delay:0.2});
+
+  // Eyebrow line draw
+  tl.to('#eyebrow-line',{scaleX:1,duration:0.7,ease:'power3.out'},0.3);
+  // Tagline fade+rise
+  tl.to('#hero-tagline',{opacity:1,y:0,duration:0.7,ease:'power3.out'},0.5);
+  // Title lines reveal (mask reveal technique)
+  tl.to('.hero-title-inner',{
+    y:0, duration:1, stagger:0.15,
+    ease:'power4.out'
+  },0.8);
+  // CTA
+  tl.to('#hero-cta',{opacity:1,y:0,duration:0.8,ease:'power3.out'},1.4);
+  // Scroll indicator
+  tl.to('#hero-scroll',{opacity:1,duration:0.6},1.8);
+
+  setRenunganDate();
+  initScrollAnimations();
+});
+
+/* ── MULTI-STRIPE PAGE TRANSITION ── */
+let currentPage='home';
+const stripes=document.querySelectorAll('.pt-stripe');
+
+function pageTransition(pageId){
+  if(pageId===currentPage) return;
+  const currentEl=document.getElementById('page-'+currentPage);
+  const targetEl=document.getElementById('page-'+pageId);
+  if(!targetEl) return;
+
+  // Stripes in
+  const tl=gsap.timeline();
+  tl.to(stripes,{
+    scaleY:1,duration:0.06,stagger:{each:0.04,from:'start'},
+    ease:'power2.in',transformOrigin:'top'
+  });
+  tl.add(()=>{
+    currentEl.classList.remove('active');
+    targetEl.classList.add('active');
+    window.scrollTo({top:0,behavior:'instant'});
+    currentPage=pageId;
+    document.querySelectorAll('.nav-link').forEach(l=>l.classList.toggle('active-link',l.dataset.page===pageId));
+    document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+  },'+=0');
+  // Stripes out
+  tl.to(stripes,{
+    scaleY:0,duration:0.06,stagger:{each:0.04,from:'end'},
+    ease:'power2.out',transformOrigin:'bottom',
+    delay:0.05,
+    onComplete:()=>{
+      initScrollAnimations();
+      if(pageId==='home') initCounters();
+    }
+  });
+}
+function navigateTo(id){ pageTransition(id); }
+
+/* ── MOBILE MENU ── */
+function toggleMobileMenu(){
+  const menu=document.getElementById('mobile-menu');
+  const btn=document.getElementById('hamburger-btn');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+function closeMobileMenu(){
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger-btn').classList.remove('open');
+}
+document.getElementById('close-menu').onclick=closeMobileMenu;
+
+/* ── SCROLL ANIMATIONS ── */
+function initScrollAnimations(){
+  ScrollTrigger.getAll().forEach(t=>t.kill());
+
+  const page='#page-'+currentPage+' ';
+
+  // reveal-up
+  document.querySelectorAll(page+'.reveal-up').forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,y:50},{
+      opacity:1,y:0,duration:0.85,ease:'power3.out',
+      delay:(i%4)*0.08,
+      scrollTrigger:{trigger:el,start:'top 86%',once:true}
+    });
+  });
+  // reveal-left
+  document.querySelectorAll(page+'.reveal-left').forEach(el=>{
+    gsap.fromTo(el,{opacity:0,x:-60},{
+      opacity:1,x:0,duration:1,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 86%',once:true}
+    });
+  });
+  // reveal-right
+  document.querySelectorAll(page+'.reveal-right').forEach(el=>{
+    gsap.fromTo(el,{opacity:0,x:60},{
+      opacity:1,x:0,duration:1,ease:'power3.out',
+      scrollTrigger:{trigger:el,start:'top 86%',once:true}
+    });
+  });
+  // reveal-scale
+  document.querySelectorAll(page+'.reveal-scale').forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,scale:0.88,y:20},{
+      opacity:1,scale:1,y:0,duration:0.7,ease:'power3.out',
+      delay:(i%5)*0.1,
+      scrollTrigger:{trigger:el,start:'top 86%',once:true}
+    });
+  });
+  // Misi list items stagger
+  document.querySelectorAll(page+'.misi-list li').forEach((el,i)=>{
+    gsap.fromTo(el,{opacity:0,x:-20},{
+      opacity:1,x:0,duration:0.6,ease:'power3.out',
+      delay:i*0.12,
+      scrollTrigger:{trigger:el,start:'top 88%',once:true}
+    });
+  });
+  // Stat items line animation
+  document.querySelectorAll(page+'.stat-item').forEach(el=>{
+    ScrollTrigger.create({
+      trigger:el,start:'top 80%',once:true,
+      onEnter:()=>el.classList.add('animated')
+    });
+  });
+
+  if(currentPage==='home'){
+    // Parallax hero
+    gsap.to('.hero-slider',{
+      yPercent:25,ease:'none',
+      scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}
+    });
+    // Visi section parallax deco
+    gsap.to('.visi-deco-quote',{
+      y:-60,ease:'none',
+      scrollTrigger:{trigger:'.visi-misi',start:'top bottom',end:'bottom top',scrub:true}
+    });
+    initCounters();
+  }
+}
+
+/* ── COUNTER ANIMATION ── */
+function initCounters(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=parseInt(el.dataset.target);
+    const obj={val:0};
+    ScrollTrigger.create({
+      trigger:el,start:'top 85%',once:true,
+      onEnter:()=>{
+        gsap.to(obj,{
+          val:target,duration:2.2,ease:'power2.out',
+          onUpdate:()=>{ el.textContent=Math.round(obj.val).toLocaleString('id-ID'); }
+        });
+      }
+    });
+  });
+}
+
+/* ── GALLERY FILTER with GSAP ── */
+document.querySelectorAll('.filter-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter=tab.dataset.filter;
+    const items=Array.from(document.querySelectorAll('.doc-item'));
+    items.forEach(item=>{
+      const match=filter==='all'||item.dataset.category===filter;
+      if(!match){
+        gsap.to(item,{opacity:0,scale:0.94,duration:0.25,ease:'power2.in',
+          onComplete:()=>{ item.style.display='none'; }
+        });
+      } else {
+        item.style.display='block';
+        item.style.opacity='0';
+        item.style.transform='scale(0.94)';
+        gsap.to(item,{opacity:1,scale:1,duration:0.35,ease:'power2.out',delay:0.05});
+      }
+    });
+  });
+});
+
+/* ── LIGHTBOX ── */
+let lbImages=[],lbIdx=0;
+document.querySelectorAll('.doc-item').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const visible=Array.from(document.querySelectorAll('.doc-item')).filter(el=>el.style.display!=='none');
+    lbImages=visible.map(el=>el.dataset.src);
+    lbIdx=visible.indexOf(item);
+    openLb(lbIdx);
+  });
+});
+function openLb(idx){
+  lbIdx=idx;
+  const lb=document.getElementById('lightbox');
+  const img=document.getElementById('lightbox-img');
+  lb.classList.add('open');
+  img.src=lbImages[idx];
+  img.classList.remove('show');
+  requestAnimationFrame(()=>img.classList.add('show'));
+  document.body.style.overflow='hidden';
+}
+function closeLb(){
+  const img=document.getElementById('lightbox-img');
+  img.classList.remove('show');
+  setTimeout(()=>{
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow='';
+  },300);
+}
+document.getElementById('lightbox-close').onclick=closeLb;
+document.getElementById('lightbox').addEventListener('click',e=>{
+  if(e.target===document.getElementById('lightbox')) closeLb();
+});
+document.getElementById('lightbox-prev').onclick=()=>openLb((lbIdx-1+lbImages.length)%lbImages.length);
+document.getElementById('lightbox-next').onclick=()=>openLb((lbIdx+1)%lbImages.length);
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('lightbox').classList.contains('open')) return;
+  if(e.key==='Escape') closeLb();
+  if(e.key==='ArrowLeft') document.getElementById('lightbox-prev').click();
+  if(e.key==='ArrowRight') document.getElementById('lightbox-next').click();
+});
+
+/* ── FORM ── */
+function submitForm(){
+  const btn=document.querySelector('.btn-submit');
+  const txt=document.getElementById('submit-text');
+  txt.textContent='Mengirim...';
+  btn.style.opacity='0.7';
+  btn.style.pointerEvents='none';
+  setTimeout(()=>{
+    document.getElementById('contact-form-el').style.display='none';
+    const success=document.getElementById('form-success');
+    success.style.display='block';
+    gsap.fromTo(success,{opacity:0,y:30},{opacity:1,y:0,duration:0.6,ease:'power3.out'});
+  },1200);
+}
+
+/* ── DATE ── */
+function setRenunganDate(){
+  const el=document.getElementById('renungan-date');
+  if(el) el.textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+</script>
+</body>
+</html>

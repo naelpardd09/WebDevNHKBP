@@ -838,6 +838,252 @@ footer::before {
   font-size: 0.75rem; opacity: 0.3;
 }
 
+/* ── PROFIL: SEJARAH ── */
+.sejarah-section {
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+}
+.sejarah-section::before {
+  content: '1978';
+  position: absolute;
+  right: -1rem; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 18vw, 16rem);
+  font-weight: 600;
+  color: rgba(255,255,255,0.03);
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+.sejarah-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 6rem;
+  align-items: center;
+}
+.sejarah-left {
+  position: relative;
+}
+.sejarah-year {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 8vw, 7rem);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.sejarah-since {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+}
+.sejarah-line {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  margin: 1.5rem 0;
+}
+.sejarah-right {
+  border-left: 1px solid rgba(255,255,255,0.06);
+  padding-left: 4rem;
+}
+.sejarah-label {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+.sejarah-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+.sejarah-title em { font-style: italic; color: var(--gold-light); }
+.sejarah-body {
+  font-size: 0.88rem;
+  line-height: 2;
+  color: rgba(255,255,255,0.45);
+}
+.sejarah-body p { margin-bottom: 1.2rem; }
+.sejarah-body p:last-child { margin-bottom: 0; }
+
+/* ── PROFIL: QUOTE KETUA ── */
+.quote-ketua {
+  background: var(--cream);
+  position: relative;
+  overflow: hidden;
+  padding: 100px 0;
+}
+.quote-ketua::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.quote-ketua::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.quote-ketua-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 4rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.quote-ketua-photo-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.quote-ketua-photo {
+  width: 180px; height: 220px;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+  position: relative;
+  z-index: 1;
+  filter: grayscale(20%);
+  transition: filter 0.4s;
+}
+.quote-ketua-photo-wrap:hover .quote-ketua-photo { filter: grayscale(0%); }
+.quote-ketua-photo-wrap::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 12px;
+  width: 100%; height: 100%;
+  border: 1px solid var(--gold);
+  opacity: 0.3;
+  z-index: 0;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.quote-ketua-photo-wrap:hover::before { opacity: 0.6; transform: translate(-4px, -4px); }
+.quote-mark {
+  font-family: var(--font-display);
+  font-size: 8rem;
+  color: var(--gold);
+  opacity: 0.15;
+  line-height: 0.6;
+  display: block;
+  margin-bottom: 0.5rem;
+  user-select: none;
+}
+.quote-ketua-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.5vw, 2rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--dark);
+  margin-bottom: 2rem;
+}
+.quote-ketua-text em { color: var(--red); font-style: normal; }
+.quote-ketua-attr {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+.quote-attr-line {
+  width: 40px; height: 1px;
+  background: var(--gold);
+}
+.quote-attr-name {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--dark);
+  letter-spacing: 0.1em;
+}
+.quote-attr-role {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--gray);
+  letter-spacing: 0.08em;
+  margin-top: 0.2rem;
+}
+
+/* ── PROFIL: NILAI ORGANISASI ── */
+.nilai-section {
+  background: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+.nilai-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin-top: 4rem;
+  border: 1px solid var(--gray-light);
+}
+.nilai-card {
+  padding: 3rem 2rem;
+  border-right: 1px solid var(--gray-light);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.4s;
+  cursor: default;
+}
+.nilai-card:last-child { border-right: none; }
+.nilai-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.nilai-card:nth-child(1)::before { background: var(--red); }
+.nilai-card:nth-child(2)::before { background: var(--gold); }
+.nilai-card:nth-child(3)::before { background: #2A5D4F; }
+.nilai-card:nth-child(4)::before { background: var(--dark2); }
+.nilai-card:hover::before { transform: scaleX(1); }
+.nilai-card:hover { background: var(--cream); }
+.nilai-icon {
+  width: 48px; height: 48px;
+  margin-bottom: 1.8rem;
+  opacity: 0.7;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.nilai-card:hover .nilai-icon { opacity: 1; transform: scale(1.1); }
+.nilai-num {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+.nilai-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 0.8rem;
+  line-height: 1.2;
+}
+.nilai-desc {
+  font-size: 0.82rem;
+  line-height: 1.8;
+  color: var(--gray);
+}
+
 /* ── PAGE 2: PROFIL ── */
 .profil-hero {
   background: var(--cream);
@@ -1364,7 +1610,15 @@ footer::before {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-item { border-right: none; }
   .kegiatan-grid { grid-template-columns: 1fr; }
-  .docs-grid { columns: 2; }
+  .sejarah-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .sejarah-right { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem; }
+  .quote-ketua-inner { grid-template-columns: 1fr; gap: 2.5rem; text-align: center; }
+  .quote-ketua-photo-wrap { margin: 0 auto; }
+  .quote-ketua-attr { justify-content: center; }
+  .nilai-grid { grid-template-columns: repeat(2, 1fr); }
+  .nilai-card { border-right: none; border-bottom: 1px solid var(--gray-light); }
+  .nilai-card:last-child { border-bottom: none; }
+  .nilai-grid { grid-template-columns: 1fr; }
   .kontak-grid { grid-template-columns: 1fr; }
   .divisi-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; padding: 0 1.5rem; gap: 2.5rem; }
@@ -1602,11 +1856,107 @@ footer::before {
 <!-- ══════════════════ PAGE 2: PROFIL ══════════════════ -->
 <div id="page-profil" class="page">
   <div class="profil-hero">
-    <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Periode 2024 – 2026</span>
+    <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Periode 2026 – 2028</span>
     <h1 class="profil-hero-title reveal-up">Pengurus Naposo<br>HKBP Duren Sawit</h1>
     <div class="gold-line"></div>
     <p class="profil-hero-sub">Melayani dengan hati yang tulus</p>
   </div>
+  <!-- SEJARAH -->
+  <section class="section sejarah-section">
+    <div class="section-inner">
+      <div class="sejarah-grid">
+        <div class="sejarah-left reveal-left">
+          <span class="sejarah-year">1978</span>
+          <span class="sejarah-since">Berdiri sejak</span>
+          <div class="sejarah-line"></div>
+          <span class="section-label" style="color:rgba(255,255,255,0.3);">Naposo HKBP<br>Duren Sawit</span>
+        </div>
+        <div class="sejarah-right reveal-right">
+          <span class="sejarah-label">Perjalanan Kami</span>
+          <h2 class="sejarah-title">Berakar dalam <em>Iman,</em><br>Tumbuh bersama Waktu</h2>
+          <div class="sejarah-body">
+            <p>Naposo HKBP Duren Sawit lahir dari kerinduan sekelompok pemuda yang ingin bertumbuh bersama dalam iman dan persekutuan. Sejak berdiri pada tahun 1978, komunitas ini telah menjadi rumah bagi ratusan pemuda yang mencari makna pelayanan di tengah kehidupan kota Jakarta yang dinamis.</p>
+            <p>Selama lebih dari empat dekade, Naposo telah melewati berbagai babak — dari generasi ke generasi, tongkat estafet pelayanan terus berpindah tangan dengan semangat yang tidak pernah padam. Paduan suara, olahraga bersama, partangiangan, hingga aksi sosial menjadi warna-warna yang memperkaya perjalanan panjang ini.</p>
+            <p>Hari ini, Naposo HKBP Duren Sawit berdiri kokoh dengan lebih dari 120 anggota aktif — bukan sekadar organisasi, melainkan keluarga yang dipertemukan oleh kasih Kristus.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE KETUA -->
+  <div class="quote-ketua">
+    <div class="quote-ketua-inner">
+      <div class="quote-ketua-photo-wrap reveal-left">
+        <img src="/galeri/galeri/ppmaxi.jpg" alt="Maximus Parsaoran Ompusunggu" class="quote-ketua-photo">
+      </div>
+      <div class="reveal-right">
+        <span class="quote-mark">"</span>
+        <p class="quote-ketua-text">
+          Naposo bukan hanya tempat berkumpul — ini adalah ruang untuk melayani Tuhan dengan sukacita, damai sejahtera, dan <em> belajar untuk menjadi berkat </em> dalam satu barisan yang tak terpatahkan.
+        </p>
+        <div class="quote-ketua-attr">
+          <div class="quote-attr-line"></div>
+          <div>
+            <div class="quote-attr-name">Maximus Parsaoran Ompusunggu, S.I.P.</div>
+            <div class="quote-attr-role">Ketua Naposo HKBP Duren Sawit · Periode 2026-2028</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NILAI ORGANISASI -->
+  <section class="section nilai-section">
+    <div class="section-inner">
+      <div style="text-align:center;">
+        <span class="section-label reveal-up">Identitas Kami</span>
+        <h2 class="section-title reveal-up">Nilai yang Kami Junjung</h2>
+        <span class="divider-gold reveal-up" style="margin:1rem auto;"></span>
+      </div>
+      <div class="nilai-grid">
+        <div class="nilai-card reveal-up">
+          <svg class="nilai-icon" viewBox="0 0 48 48" fill="none" stroke="var(--red)" stroke-width="1.2">
+            <path d="M24 4 L24 44M14 14 L34 14"/>
+            <circle cx="24" cy="24" r="18" stroke-dasharray="4 3" opacity="0.3"/>
+          </svg>
+          <span class="nilai-num">01</span>
+          <h3 class="nilai-title">Iman</h3>
+          <p class="nilai-desc">Seluruh gerak langkah kami berakar pada iman kepada Kristus — sumber kekuatan dan arah bagi setiap pemuda.</p>
+        </div>
+        <div class="nilai-card reveal-up">
+          <svg class="nilai-icon" viewBox="0 0 48 48" fill="none" stroke="var(--gold)" stroke-width="1.2">
+            <path d="M24 8 C14 8 8 16 8 24 C8 32 14 40 24 40 C34 40 40 32 40 24"/>
+            <path d="M30 8 C36 12 40 18 40 24"/>
+            <path d="M16 20 L22 26 L32 16"/>
+          </svg>
+          <span class="nilai-num">02</span>
+          <h3 class="nilai-title">Kebersamaan</h3>
+          <p class="nilai-desc">Kami percaya bahwa komunitas yang hangat dan inklusif adalah cerminan kasih Kristus yang nyata di dunia.</p>
+        </div>
+        <div class="nilai-card reveal-up">
+          <svg class="nilai-icon" viewBox="0 0 48 48" fill="none" stroke="#2A5D4F" stroke-width="1.2">
+            <path d="M24 6 L28 18 L40 18 L30 26 L34 38 L24 30 L14 38 L18 26 L8 18 L20 18 Z" opacity="0.5"/>
+            <path d="M24 12 L27 21 L36 21 L29 26 L32 35 L24 30 L16 35 L19 26 L12 21 L21 21 Z"/>
+          </svg>
+          <span class="nilai-num">03</span>
+          <h3 class="nilai-title">Pelayanan</h3>
+          <p class="nilai-desc">Melayani bukan karena kewajiban, tapi karena kerinduan — bagi gereja, sesama, dan masyarakat di sekitar kami.</p>
+        </div>
+        <div class="nilai-card reveal-up">
+          <svg class="nilai-icon" viewBox="0 0 48 48" fill="none" stroke="var(--dark2)" stroke-width="1.2">
+            <circle cx="24" cy="24" r="16"/>
+            <path d="M24 14 L24 24 L32 28"/>
+            <path d="M8 24 L4 24M44 24 L40 24M24 8 L24 4M24 44 L24 40"/>
+          </svg>
+          <span class="nilai-num">04</span>
+          <h3 class="nilai-title">Pertumbuhan</h3>
+          <p class="nilai-desc">Setiap kegiatan dirancang agar anggota bertumbuh — dalam karakter, talenta, iman, dan kepemimpinan.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="profil-section" style="background:var(--white);">
     <div class="section-inner">
       <p class="profil-section-label">Pendeta Ressort</p>

@@ -1305,6 +1305,191 @@ footer::before {
 .dokumentasi-hero {
   background: var(--cream); padding: 200px 0 100px; text-align: center;
 }
+
+/* Featured Slider */
+.featured-slider {
+  position: relative;
+  width: 100%;
+  height: 72vh;
+  min-height: 500px;
+  max-height: 760px;
+  overflow: hidden;
+  background: var(--dark);
+}
+.featured-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.95s cubic-bezier(0.77,0,0.175,1);
+  will-change: transform;
+}
+.featured-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.featured-slide-img {
+  width: 100%; height: 115%;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: 0; left: 0;
+  will-change: transform;
+  transition: transform 0.95s cubic-bezier(0.4,0,0.2,1);
+  transform: scale(1.06) translateY(0%);
+}
+.featured-slide.active .featured-slide-img {
+  transform: scale(1) translateY(0%);
+}
+.featured-slide-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(
+    160deg,
+    rgba(0,0,0,0.1) 0%,
+    rgba(0,0,0,0.25) 40%,
+    rgba(0,0,0,0.82) 100%
+  );
+}
+.featured-slide-content {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 2;
+  padding: 4rem 5rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  transform: translateY(18px);
+  opacity: 0;
+  transition: transform 0.75s 0.15s cubic-bezier(0.4,0,0.2,1), opacity 0.75s 0.15s;
+}
+.featured-slide.active .featured-slide-content {
+  transform: translateY(0); opacity: 1;
+}
+.featured-slide-left { flex: 1; }
+.featured-slide-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,168,76,0.35);
+  padding: 0.3rem 0.9rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(4px);
+}
+.featured-slide-category::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+}
+.featured-slide-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.12;
+  margin-bottom: 0.6rem;
+}
+.featured-slide-meta {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.12em;
+}
+.featured-slide-right {
+  flex-shrink: 0;
+  text-align: right;
+}
+.featured-slide-num {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.08);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  user-select: none;
+}
+/* Nav arrows */
+.featured-nav {
+  position: absolute;
+  bottom: 4rem;
+  z-index: 3;
+  width: 50px; height: 50px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(8px);
+  color: rgba(255,255,255,0.75);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+}
+.featured-nav:hover { background: var(--red); border-color: var(--red); color: white; }
+#feat-prev { right: 5rem; }
+#feat-next { right: 1.8rem; }
+#feat-prev:hover { transform: translateX(-3px); }
+#feat-next:hover { transform: translateX(3px); }
+/* Progress bar */
+.featured-progress {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  z-index: 4;
+  width: 0%;
+}
+/* Slide thumbnails strip */
+.featured-thumbs {
+  position: absolute;
+  top: 2rem; right: 2rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.featured-thumb {
+  width: 4px; height: 28px;
+  background: rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: background 0.3s, height 0.3s;
+  border-radius: 2px;
+}
+.featured-thumb.active {
+  background: var(--gold);
+  height: 44px;
+}
+
+/* Stats bar */
+.docs-stats-bar {
+  background: var(--dark);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 1.1rem 5rem;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+.docs-stat {
+  display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.docs-stat strong {
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 300;
+  color: var(--gold);
+}
+.docs-stat-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.07); }
+
+/* Filter tabs */
 .filter-tabs {
   display: flex; justify-content: center;
   margin-bottom: 3rem;
@@ -1327,27 +1512,50 @@ footer::before {
 }
 .filter-tab.active { color: var(--red); }
 .filter-tab.active::after { transform: scaleX(1); }
-.docs-grid { columns: 4; column-gap: 12px; }
+
+/* Masonry grid */
+.docs-grid { columns: 4; column-gap: 10px; }
 .doc-item {
-  break-inside: avoid; margin-bottom: 12px;
+  break-inside: avoid; margin-bottom: 10px;
   position: relative; overflow: hidden; cursor: pointer; display: block;
   border-radius: 2px;
 }
 .doc-item img {
   width: 100%; display: block;
-  transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.65s cubic-bezier(0.4,0,0.2,1);
 }
-.doc-item:hover img { transform: scale(1.08); }
+.doc-item:hover img { transform: scale(1.07); }
 .doc-item-overlay {
   position: absolute; inset: 0;
-  background: rgba(26,26,26,0.6);
+  background: rgba(26,26,26,0.55);
   opacity: 0; transition: opacity 0.4s;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 0.5rem;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1;
 }
 .doc-item:hover .doc-item-overlay { opacity: 1; }
 .doc-item-overlay svg { color: white; transform: scale(0.8); transition: transform 0.3s; }
 .doc-item:hover .doc-item-overlay svg { transform: scale(1); }
+/* Label slide-up on hover */
+.doc-item-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 1.4rem 0.9rem 0.8rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%);
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  z-index: 2;
+}
+.doc-item:hover .doc-item-label { transform: translateY(0); }
+.doc-item-label-event {
+  font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 600;
+  color: white; display: block; margin-bottom: 0.15rem;
+}
+.doc-item-label-year {
+  font-family: var(--font-display);
+  font-size: 0.65rem; font-style: italic;
+  color: var(--gold);
+}
 
 /* Lightbox */
 #lightbox {
@@ -1590,6 +1798,9 @@ footer::before {
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) {
   .docs-grid { columns: 3; }
+  .featured-slide-content { padding: 2.5rem 3rem; }
+  #feat-prev { right: 4rem; }
+  #feat-next { right: 1rem; }
   .divisi-grid { grid-template-columns: repeat(2, 1fr); }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
@@ -1610,6 +1821,15 @@ footer::before {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-item { border-right: none; }
   .kegiatan-grid { grid-template-columns: 1fr; }
+  .docs-grid { columns: 2; }
+  .featured-slider { height: 60vw; min-height: 300px; }
+  .featured-slide-content { padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 0; }
+  .featured-slide-right { display: none; }
+  .featured-nav { bottom: 1.5rem; width: 40px; height: 40px; }
+  #feat-prev { right: 4.2rem; }
+  #feat-next { right: 0.8rem; }
+  .featured-thumbs { top: 1rem; right: 1rem; }
+  .docs-stats-bar { padding: 1rem 1.5rem; gap: 1.5rem; flex-wrap: wrap; }
   .sejarah-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .sejarah-right { border-left: none; padding-left: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem; }
   .quote-ketua-inner { grid-template-columns: 1fr; gap: 2.5rem; text-align: center; }
@@ -2004,7 +2224,7 @@ footer::before {
       </div>
     </div>
   </section>
-  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Ikuti Kami</p><div class="footer-social" style="margin-top:0;"><a class="social-icon" href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a class="social-icon" href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a></div><p style="font-size:0.74rem;opacity:0.35;margin-top:1.5rem;">@nhkbp_durenawit</p></div></div><div class="footer-bottom"><span>© 2026 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Satu Barisan, Tak Terpatahkan</span></div></footer>
+  <footer><div class="footer-grid"><div><div class="footer-brand-name">Naposo HKBP Duren Sawit</div><span class="divider-gold"></span><p class="footer-desc">Komunitas pemuda gereja yang bersatu dalam iman, bertumbuh dalam kasih, dan melayani dengan sepenuh hati.</p></div><div><p class="footer-col-title">Navigasi</p><ul class="footer-nav-links"><li><a onclick="navigateTo('home')">Home</a></li><li><a onclick="navigateTo('profil')">Profil Pengurus</a></li><li><a onclick="navigateTo('kegiatan')">Kegiatan</a></li><li><a onclick="navigateTo('dokumentasi')">Dokumentasi</a></li><li><a onclick="navigateTo('kontak')">Kontak</a></li></ul></div><div><p class="footer-col-title">Ikuti Kami</p><div class="footer-social" style="margin-top:0;"><a class="social-icon" href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a><a class="social-icon" href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58 2.78 2.78 0 001.94 1.96C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 001.94-1.96A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg></a></div><p style="font-size:0.74rem;opacity:0.35;margin-top:1.5rem;">@nhkbpdursa</p></div></div><div class="footer-bottom"><span>© 2026 Naposo HKBP Duren Sawit. All rights reserved.</span><span>Satu Barisan, Tak Terpatahkan</span></div></footer>
 </div>
 
 <!-- ══════════════════ PAGE 3: KEGIATAN ══════════════════ -->
@@ -2063,12 +2283,90 @@ footer::before {
 
 <!-- ══════════════════ PAGE 4: DOKUMENTASI ══════════════════ -->
 <div id="page-dokumentasi" class="page">
-  <div class="dokumentasi-hero">
-    <span class="section-label reveal-up" style="display:block;text-align:center;margin-bottom:1rem;">Galeri Foto</span>
-    <h1 class="reveal-up" style="font-family:var(--font-display);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:300;">Dokumentasi Kegiatan</h1>
-    <div class="gold-line"></div>
-    <p style="font-family:var(--font-body);font-size:0.83rem;color:var(--gray);max-width:480px;margin:0 auto;line-height:1.7;">Rekam jejak perjalanan pelayanan Naposo HKBP Duren Sawit dalam gambar.</p>
+
+  <!-- FEATURED SLIDER -->
+  <div class="featured-slider" id="featured-slider">
+    <div class="featured-track" id="featured-track">
+
+      <div class="featured-slide active">
+        <img class="featured-slide-img" src="https://picsum.photos/1600/900?random=201" alt="Konser Natal">
+        <div class="featured-slide-overlay"></div>
+        <div class="featured-slide-content">
+          <div class="featured-slide-left">
+            <span class="featured-slide-category">Paduan Suara</span>
+            <h2 class="featured-slide-title">Konser Natal Naposo<br>HKBP Duren Sawit</h2>
+            <span class="featured-slide-meta">Desember 2025 &nbsp;·&nbsp; Gereja HKBP Duren Sawit</span>
+          </div>
+          <div class="featured-slide-right"><span class="featured-slide-num">01</span></div>
+        </div>
+      </div>
+
+      <div class="featured-slide">
+        <img class="featured-slide-img" src="https://picsum.photos/1600/900?random=202" alt="Fun Sport">
+        <div class="featured-slide-overlay"></div>
+        <div class="featured-slide-content">
+          <div class="featured-slide-left">
+            <span class="featured-slide-category">Olahraga</span>
+            <h2 class="featured-slide-title">Fun Sport Day<br>Naposo 2025</h2>
+            <span class="featured-slide-meta">Oktober 2025 &nbsp;·&nbsp; GOR Duren Sawit</span>
+          </div>
+          <div class="featured-slide-right"><span class="featured-slide-num">02</span></div>
+        </div>
+      </div>
+
+      <div class="featured-slide">
+        <img class="featured-slide-img" src="https://picsum.photos/1600/900?random=203" alt="Partangiangan">
+        <div class="featured-slide-overlay"></div>
+        <div class="featured-slide-content">
+          <div class="featured-slide-left">
+            <span class="featured-slide-category">Kerohanian</span>
+            <h2 class="featured-slide-title">Partangiangan Bulan<br>Misi 2025</h2>
+            <span class="featured-slide-meta">Agustus 2025 &nbsp;·&nbsp; Rumah Keluarga Sitorus</span>
+          </div>
+          <div class="featured-slide-right"><span class="featured-slide-num">03</span></div>
+        </div>
+      </div>
+
+      <div class="featured-slide">
+        <img class="featured-slide-img" src="https://picsum.photos/1600/900?random=204" alt="HUT Naposo">
+        <div class="featured-slide-overlay"></div>
+        <div class="featured-slide-content">
+          <div class="featured-slide-left">
+            <span class="featured-slide-category">Seni &amp; Budaya</span>
+            <h2 class="featured-slide-title">HUT Naposo ke-47<br>Malam Budaya</h2>
+            <span class="featured-slide-meta">Juni 2025 &nbsp;·&nbsp; Aula HKBP Duren Sawit</span>
+          </div>
+          <div class="featured-slide-right"><span class="featured-slide-num">04</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Thumb indicators -->
+    <div class="featured-thumbs" id="featured-thumbs">
+      <div class="featured-thumb active" data-idx="0"></div>
+      <div class="featured-thumb" data-idx="1"></div>
+      <div class="featured-thumb" data-idx="2"></div>
+      <div class="featured-thumb" data-idx="3"></div>
+    </div>
+
+    <button class="featured-nav" id="feat-prev">&#8592;</button>
+    <button class="featured-nav" id="feat-next">&#8594;</button>
+    <div class="featured-progress" id="featured-progress"></div>
   </div>
+
+  <!-- STATS BAR -->
+  <div class="docs-stats-bar">
+    <div class="docs-stat"><strong>16</strong>&nbsp;Foto</div>
+    <div class="docs-stat-sep"></div>
+    <div class="docs-stat"><strong>5</strong>&nbsp;Kategori</div>
+    <div class="docs-stat-sep"></div>
+    <div class="docs-stat">Arsip sejak&nbsp;<strong>2022</strong></div>
+    <div class="docs-stat-sep"></div>
+    <div class="docs-stat"><strong>4</strong>&nbsp;Tahun Dokumentasi</div>
+  </div>
+
+  <!-- GALLERY GRID -->
   <section class="section" style="padding-top:60px;">
     <div class="section-inner">
       <div class="filter-tabs">
@@ -2079,22 +2377,22 @@ footer::before {
         <button class="filter-tab" data-filter="kerohanian">Kerohanian</button>
       </div>
       <div class="docs-grid" id="docs-grid">
-        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/400?random=101"><img src="https://picsum.photos/600/400?random=101" alt="Paduan Suara 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/700?random=102"><img src="https://picsum.photos/600/700?random=102" alt="Olahraga 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/450?random=103"><img src="https://picsum.photos/600/450?random=103" alt="Seni 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/380?random=104"><img src="https://picsum.photos/600/380?random=104" alt="Kerohanian 1" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/500?random=105"><img src="https://picsum.photos/600/500?random=105" alt="Paduan Suara 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=106"><img src="https://picsum.photos/600/400?random=106" alt="Olahraga 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/640?random=107"><img src="https://picsum.photos/600/640?random=107" alt="Kerohanian 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=108"><img src="https://picsum.photos/600/400?random=108" alt="Seni 2" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/420?random=109"><img src="https://picsum.photos/600/420?random=109" alt="Paduan Suara 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/580?random=110"><img src="https://picsum.photos/600/580?random=110" alt="Olahraga 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/400?random=111"><img src="https://picsum.photos/600/400?random=111" alt="Kerohanian 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/460?random=112"><img src="https://picsum.photos/600/460?random=112" alt="Seni 3" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/720?random=113"><img src="https://picsum.photos/600/720?random=113" alt="Paduan Suara 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=114"><img src="https://picsum.photos/600/400?random=114" alt="Olahraga 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/480?random=115"><img src="https://picsum.photos/600/480?random=115" alt="Kerohanian 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
-        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=116"><img src="https://picsum.photos/600/400?random=116" alt="Seni 4" loading="lazy"><div class="doc-item-overlay"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/400?random=101"><img src="https://picsum.photos/600/400?random=101" alt="Paduan Suara 1" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Konser Natal</span><span class="doc-item-label-year">Paduan Suara · 2025</span></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/700?random=102"><img src="https://picsum.photos/600/700?random=102" alt="Olahraga 1" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Fun Sport Day</span><span class="doc-item-label-year">Olahraga · 2025</span></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/450?random=103"><img src="https://picsum.photos/600/450?random=103" alt="Seni 1" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Malam Budaya HUT</span><span class="doc-item-label-year">Seni & Budaya · 2025</span></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/380?random=104"><img src="https://picsum.photos/600/380?random=104" alt="Kerohanian 1" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Partangiangan Bulanan</span><span class="doc-item-label-year">Kerohanian · 2025</span></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/500?random=105"><img src="https://picsum.photos/600/500?random=105" alt="Paduan Suara 2" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Latihan Paduan Suara</span><span class="doc-item-label-year">Paduan Suara · 2024</span></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=106"><img src="https://picsum.photos/600/400?random=106" alt="Olahraga 2" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Futsal Naposo</span><span class="doc-item-label-year">Olahraga · 2024</span></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/640?random=107"><img src="https://picsum.photos/600/640?random=107" alt="Kerohanian 2" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Ibadah Paskah</span><span class="doc-item-label-year">Kerohanian · 2024</span></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=108"><img src="https://picsum.photos/600/400?random=108" alt="Seni 2" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Pentas Seni Tahunan</span><span class="doc-item-label-year">Seni & Budaya · 2024</span></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/420?random=109"><img src="https://picsum.photos/600/420?random=109" alt="Paduan Suara 3" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Minggu Pelayanan</span><span class="doc-item-label-year">Paduan Suara · 2024</span></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/580?random=110"><img src="https://picsum.photos/600/580?random=110" alt="Olahraga 3" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Badminton Bersama</span><span class="doc-item-label-year">Olahraga · 2023</span></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/400?random=111"><img src="https://picsum.photos/600/400?random=111" alt="Kerohanian 3" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Retreat Naposo</span><span class="doc-item-label-year">Kerohanian · 2023</span></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/460?random=112"><img src="https://picsum.photos/600/460?random=112" alt="Seni 3" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Workshop Seni</span><span class="doc-item-label-year">Seni & Budaya · 2023</span></div></div>
+        <div class="doc-item reveal-up" data-category="paduan-suara" data-src="https://picsum.photos/600/720?random=113"><img src="https://picsum.photos/600/720?random=113" alt="Paduan Suara 4" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Konser Advent</span><span class="doc-item-label-year">Paduan Suara · 2023</span></div></div>
+        <div class="doc-item reveal-up" data-category="olahraga" data-src="https://picsum.photos/600/400?random=114"><img src="https://picsum.photos/600/400?random=114" alt="Olahraga 4" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Basket Naposo</span><span class="doc-item-label-year">Olahraga · 2022</span></div></div>
+        <div class="doc-item reveal-up" data-category="kerohanian" data-src="https://picsum.photos/600/480?random=115"><img src="https://picsum.photos/600/480?random=115" alt="Kerohanian 4" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Perayaan HUT Gereja</span><span class="doc-item-label-year">Kerohanian · 2022</span></div></div>
+        <div class="doc-item reveal-up" data-category="seni" data-src="https://picsum.photos/600/400?random=116"><img src="https://picsum.photos/600/400?random=116" alt="Seni 4" loading="lazy"><div class="doc-item-overlay"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div><div class="doc-item-label"><span class="doc-item-label-event">Pameran Foto Naposo</span><span class="doc-item-label-year">Seni & Budaya · 2022</span></div></div>
       </div>
     </div>
   </section>
@@ -2436,6 +2734,67 @@ function setRenunganDate(){
   const el=document.getElementById('renungan-date');
   if(el) el.textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 }
+
+/* ── FEATURED SLIDER ── */
+(function(){
+  const DURATION = 5500;
+  let idx = 0, timer = null;
+  const slides  = document.querySelectorAll('.featured-slide');
+  const track   = document.getElementById('featured-track');
+  const bar     = document.getElementById('featured-progress');
+  const thumbs  = document.querySelectorAll('.featured-thumb');
+  const total   = slides.length;
+  if(!track || !total) return;
+
+  function go(n) {
+    slides[idx].classList.remove('active');
+    thumbs[idx] && thumbs[idx].classList.remove('active');
+    idx = (n + total) % total;
+    slides[idx].classList.add('active');
+    thumbs[idx] && thumbs[idx].classList.add('active');
+    track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+    resetBar();
+  }
+
+  function resetBar() {
+    if(bar) {
+      bar.style.transition = 'none';
+      bar.style.width = '0%';
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        bar.style.transition = 'width ' + DURATION + 'ms linear';
+        bar.style.width = '100%';
+      }));
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => go(idx + 1), DURATION);
+  }
+
+  // Arrows
+  document.getElementById('feat-prev')?.addEventListener('click', () => go(idx - 1));
+  document.getElementById('feat-next')?.addEventListener('click', () => go(idx + 1));
+
+  // Thumb clicks
+  thumbs.forEach(t => t.addEventListener('click', () => go(+t.dataset.idx)));
+
+  // Touch swipe
+  let tx = 0;
+  const el = document.getElementById('featured-slider');
+  el?.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, {passive:true});
+  el?.addEventListener('touchend',   e => {
+    const d = tx - e.changedTouches[0].screenX;
+    if(Math.abs(d) > 40) go(d > 0 ? idx + 1 : idx - 1);
+  }, {passive:true});
+
+  // Parallax via GSAP if available
+  if(typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.to('#featured-slider .featured-slide-img', {
+      yPercent: 18, ease: 'none',
+      scrollTrigger: { trigger: '#featured-slider', start: 'top top', end: 'bottom top', scrub: true }
+    });
+  }
+
+  resetBar();
+})();
 </script>
 </body>
 </html>

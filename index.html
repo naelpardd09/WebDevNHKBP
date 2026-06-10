@@ -28,7 +28,7 @@
   --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 100%; }
 body {
   font-family: var(--font-body);
   color: var(--dark);
@@ -109,7 +109,7 @@ body::before {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-  padding: 1.5rem 3rem;
+  padding: 1.5rem clamp(1.5rem, 4vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -120,7 +120,7 @@ body::before {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 1px 0 rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.05);
-  padding: 0.9rem 3rem;
+  padding: 0.9rem clamp(1.5rem, 4vw, 3rem);
 }
 .nav-logo {
   display: flex; align-items: center; gap: 0.75rem;
@@ -129,11 +129,15 @@ body::before {
 .nav-logo svg { width: 30px; height: 30px; }
 .nav-logo-text {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: clamp(0.95rem, 1.5vw, 1.2rem);
   font-weight: 600;
   color: var(--white);
   letter-spacing: 0.03em;
   transition: color 0.5s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: clamp(140px, 20vw, 260px);
 }
 #navbar.scrolled .nav-logo-text { color: var(--dark); }
 
@@ -303,8 +307,9 @@ body::before {
 
 .hero-content {
   position: absolute;
-  bottom: 18%;
-  left: 8%;
+  bottom: clamp(10%, 18%, 22%);
+  left: clamp(5%, 8%, 10%);
+  right: clamp(5%, 8%, 10%);
   z-index: 3;
   max-width: 720px;
 }
@@ -323,9 +328,9 @@ body::before {
 }
 .hero-tagline {
   font-family: var(--font-body);
-  font-size: 0.68rem;
+  font-size: clamp(0.6rem, 1vw, 0.68rem);
   font-weight: 400;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
   opacity: 0;
@@ -486,11 +491,11 @@ body::before {
 .hero-dot.active::after { transform: scaleX(1); }
 
 /* ── SECTION COMMON ── */
-.section { padding: 120px 0; }
+.section { padding: clamp(60px, 10vw, 120px) 0; }
 .section-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
 }
 .section-label {
   display: block;
@@ -765,7 +770,7 @@ footer {
 footer::before {
   content: '';
   position: absolute;
-  top: 0; left: 4rem; right: 4rem;
+  top: 0; left: clamp(1.5rem, 5vw, 4rem); right: clamp(1.5rem, 5vw, 4rem);
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
 }
@@ -775,7 +780,7 @@ footer::before {
   gap: 4rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
 }
 .footer-brand-name {
   font-family: var(--font-display);
@@ -831,7 +836,7 @@ footer::before {
 .footer-bottom {
   border-top: 1px solid rgba(255,255,255,0.05);
   margin-top: 4rem;
-  padding: 1.5rem 4rem;
+  padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
   max-width: 1200px;
   margin-left: auto; margin-right: auto;
   display: flex; align-items: center; justify-content: space-between;
@@ -943,7 +948,7 @@ footer::before {
 .quote-ketua-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 4rem;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 5rem;
@@ -1236,7 +1241,7 @@ footer::before {
   font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.8;
 }
 .timeline-strip {
-  background: var(--gold); padding: 0 4rem; overflow-x: auto;
+  background: var(--gold); padding: 0 clamp(1.5rem, 5vw, 4rem); overflow-x: auto;
   position: relative;
 }
 .timeline-inner {
@@ -1608,7 +1613,7 @@ footer::before {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
 }
-.kontak-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 4rem; }
+.kontak-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem); }
 .kontak-hero-title {
   font-family: var(--font-display);
   font-size: clamp(3rem, 6vw, 5.5rem); color: var(--white); font-weight: 300;
@@ -1621,7 +1626,7 @@ footer::before {
 .kontak-content { padding: 80px 0; }
 .kontak-grid {
   display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem;
-  max-width: 1200px; margin: 0 auto; padding: 0 4rem;
+  max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.5rem, 5vw, 4rem);
 }
 .kontak-info-item {
   display: flex; gap: 1.2rem; align-items: flex-start;
@@ -1805,10 +1810,20 @@ footer::before {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-grid > *:last-child { grid-column: 1 / -1; }
+  .visi-misi-grid { gap: 3rem; }
+  .sejarah-grid { gap: 3rem; }
+  .quote-ketua-inner { gap: 3rem; }
+}
+
+/* Medium laptops — catches the "laptop lain" gap */
+@media (max-width: 900px) {
+  .visi-deco-quote { font-size: clamp(6rem, 15vw, 12rem); }
+  .sejarah-right { padding-left: 2rem; }
+  .featured-slide-content { padding: 2rem; }
+  .nav-links { gap: 1.5rem; }
 }
 @media (max-width: 768px) {
-  .section-inner { padding: 0 1.5rem; }
-  .section { padding: 80px 0; }
+  .section { padding: 60px 0; }
   .nav-links { display: none; }
   .hamburger { display: flex; }
   #navbar { padding: 1.2rem 1.5rem; }
@@ -1841,11 +1856,9 @@ footer::before {
   .nilai-grid { grid-template-columns: 1fr; }
   .kontak-grid { grid-template-columns: 1fr; }
   .divisi-grid { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; padding: 0 1.5rem; gap: 2.5rem; }
-  .footer-bottom { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+  .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
   .profil-hero, .kegiatan-hero, .dokumentasi-hero, .kontak-hero { padding: 140px 0 60px; }
-  .kontak-grid { padding: 0 1.5rem; }
-  .kontak-hero-inner { padding: 0 1.5rem; }
   .renungan-card { padding: 2rem 1.5rem; }
   .mobile-menu-line { display: none; }
   body { cursor: auto; }
